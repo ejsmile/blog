@@ -1,0 +1,25 @@
+baseURL = "http://p.karasov.net/"
+languageCode = "ru-ru"
+title = "Павел Карасов"
+copyright = "Copyright &copy; 2018 - Карасов Павел"
+canonifyurls = true 
+theme = "kiera"  
+paginate = 3  
+summaryLength = 30 
+enableEmoji = true 
+pygmentsCodeFences = true
+
+disqusShortname = "pavelkarasov" #Disqus shortname 
+googleAnalytics = "UA-110991583-1" #Google Analytics ID
+
+[author]          
+github = "ejsmile"     
+linkedin = ""     
+facebook = ""     
+twitter = ""     
+instagram = ""
+vk = "pakarasov"
+mail = "pavel@karasov.net"
+
+[params]     
+tagline = "Программист C#. Любитель наводить порядок"
