@@ -1,4 +1,4 @@
-baseURL = "http://p.karasov.net/"
+baseURL = "https://p.karasov.net/"
 languageCode = "ru-ru"
 title = "Павел Карасов"
 copyright = "Copyright &copy; 2018 - Карасов Павел"
@@ -8,6 +8,7 @@ paginate = 3
 summaryLength = 30 
 enableEmoji = true 
 pygmentsCodeFences = true
+uglyurls = true
 
 disqusShortname = "pavelkarasov" #Disqus shortname 
 googleAnalytics = "UA-110991583-1" #Google Analytics ID
