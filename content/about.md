@@ -10,8 +10,10 @@ date: 2017-12-10
 
 # Павел Карасов
 
-Senior developer С#, Team lead, MS SQL developer
-иногда 1С (стыдно)
+* Senior developer С#
+* Team lead
+* MS SQL developer
+* <s> иногда 1С </s> (стыдно)
 
 Отец 3 дочек
 Увлекаюсь бегом [Endomodo.com](https://www.endomondo.com/profile/1658037)
