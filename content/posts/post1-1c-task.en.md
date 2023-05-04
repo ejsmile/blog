@@ -1,22 +1,19 @@
 ---
-title: "Эксперименты над олимпиадной задачей"
+title: "Experiments on an Olympiad problem"
+description: 'It so happened that I got into graduate school, and while walking past the department, I stumbled upon an Olympiad problem on 1C. In short, the problem sounds like this: "There are sales records for each day, you need to find the longest period when the plan was executed." And then, while walking with my sleeping daughter, I had a question, how many ways can this be done in SQL? Solutions will be based on MS SQL.'
 date: 2017-05-03
-description : ""
 tags : [
     "sql",
     "ms sql server",
     "ms sql",
     "development"
 ]
-image : ""
-categories : []
 ---
+## Introduction
 
-Так получилось, что я попал в магистратуру, и как то гуляя мимо кафедры на глаза попалась олимпиадная задача по 1С. Кратко задача звучит так: "Есть записи продажи за каждый день, необходимо найти наибольший период когда план выполнялся". А потом когда я гулял со спящей дочкой у меня встав вопрос, а сколькими способами это можно сделать на SQL. Решения будут на основе MS SQL.
+It so happened that I got into graduate school, and while walking past the department, I stumbled upon an Olympiad problem on 1C. In short, the problem sounds like this: 'There are sales records for each day, you need to find the longest period when the plan was executed.' And then, while walking with my sleeping daughter, I had a question, how many ways can this be done in SQL? Solutions will be based on MS SQL."
 
-<!--more-->
-
-Создадим таблицу и начнем
+Let's create a table and begin.
 
 ```sql
 CREATE TABLE [tmp].[forFindDate](
@@ -65,12 +62,9 @@ GO
 
 ```
 
+## First method
 
-## Первый способ 
-
-
-SQl запросы через join на самого себя
-
+SQL queries using self-join.
 
 ```sql
 declare @planValue int = 15
@@ -78,7 +72,7 @@ declare @planValue int = 15
 --самый очевидный left
 select 	
 	top 1
-	'сам на себя',
+	'to itself',
 	BeginDate,
 	DATEADD(Day, -1, EndDate) EndDate
 from (select 
@@ -97,7 +91,7 @@ from (select
 order by
 	DATEDIFF(day, BeginDate, EndDate) desc
 
--- или как мне нравиться больше через with
+-- or as I prefer, through CTE 
 
 ;with periodDate1 as(
 	select 
@@ -116,14 +110,14 @@ order by
 )
 select 
 	top 1
-	'сам на себя (with left)' title,
+	'to itself (with left)' title,
 	BeginDate,
 	DATEADD(Day, -1, EndDate) EndDate
 from periodDate1
 order by
 	DATEDIFF(day, BeginDate, EndDate) desc
 
---меняем на full
+--change to full join
 
 ;with periodDate2 as(
 	select 
@@ -142,13 +136,13 @@ order by
 )
 select 
 	top 1
-	'сам на себя (with full)' title,
+	'to itself (with full)' title,
 	BeginDate,
 	DATEADD(Day, -1, EndDate) EndDate
 from periodDate2
 order by
 	DATEDIFF(day, BeginDate, EndDate) desc
---меняем на right
+--change to right join
 ;with periodDate3 as(
 	select 
 		ISNULL(max(s.date), '20170401') BeginDate,
@@ -166,7 +160,7 @@ order by
 )
 select 
 	top 1
-	'сам на себя (with right)' title,
+	'to itself (with right)' title,
 	DATEADD(Day, 1, BeginDate) BeginDate, 
 	EndDate
 from periodDate3
@@ -175,9 +169,9 @@ order by
 ```
 
 
-Причем при любом join получим абсолютно одинаковый план (через NESTED LOOP (left outer join)).
+Moreover, for any join we will get exactly the same execution plan (via NESTED LOOP (left outer join)).
 
-Планы исполнения запросов через join
+Execution plans for queries using join.
 
 {{< figure src="https://habrastorage.org/files/7c5/25f/612/7c525f612b1e47319d27298e7ed1ef80.png" class="mid" >}}
 {{< figure src="https://habrastorage.org/files/e32/75a/a65/e3275aa650ae475ba8beea4578141da0.png" class="mid" >}}
@@ -185,10 +179,10 @@ order by
 {{< figure src="https://habrastorage.org/files/8c3/187/cff/8c3187cff5994ab18c8a6916eb5158d4.png" class="mid" >}}
 
 
-## Второй способ
+## Second method
 
 
-SQL запросы через корреляционный запрос
+SQL queries using a correlated subquery.
 
 
 ```sql
@@ -204,23 +198,22 @@ declare @planValue int = 15
 		s.value > @planValue			
 )
 select top 1 
-	'корреляционный запрос', p.BeginDate, p.EndDate
+	'correlated subquery"', p.BeginDate, p.EndDate
 from 
 	periodDate4 p 
 order by 
 	DATEDIFF(DAY,  p.BeginDate, p.EndDate) desc
 ```
 
+In this case, we get NESTED LOOP (inner join).
 
-В данном случай мы получаем NESTED LOOP (inner join)).
-
-{{< figure src="https://habrastorage.org/files/e93/01b/45f/e9301b45ffd44e718c59cee4e85cb24b.png" class="mid" caption="Планы исполнения корреляционного запроса">}}
-
-
-## Третий способ
+{{< figure src="https://habrastorage.org/files/e93/01b/45f/e9301b45ffd44e718c59cee4e85cb24b.png" class="mid" caption="Execution plans for a correlated subquery">}}
 
 
-пока все не интересно, теперь возьмем функцию APPLY (появилась в MS SQL 2005). Фактически на  каждую строку будем делать под запрос.
+## Third method
+
+
+Now let's take the APPLY function (which appeared in MS SQL 2005). Essentially, we will be applying a subquery to each row.
 
 
 ```sql
@@ -233,7 +226,7 @@ declare @planValue int = 15
 	from [tmp].[forFindDate] s
 		outer apply
 		(
-		--особенностью храненим данных (сортировка по дате)
+		--we will use the data storage feature (sorting by date).
 		select
 			top 1
 				ee.date
@@ -261,19 +254,18 @@ order by
 ```
 
 
-В данном случай опять получаем  NESTED LOOP (left outer join), но этот способ самый оптимальный на данный момент (по крайне мере так считает MS SQL).
+In this case, we again get NESTED LOOP (left outer join), but this method is the most optimal at the moment (at least according to MS SQL).
 
-{{< figure src="https://habrastorage.org/files/9c7/939/882/9c7939882a40495fa984e17a4e3527cd.png" class="mid" caption="Планы исполнения apply">}}
-
-
-Пока все было скучно и обыденно.
-
-## Четвертый способ
+{{< figure src="https://habrastorage.org/files/9c7/939/882/9c7939882a40495fa984e17a4e3527cd.png" class="mid" caption="Execution plans for apply">}}
 
 
-Поиграем с рекурсией: к текущей строке будем клеить данные если дата на один день старше и выполняется план продаж. Таким образом будем расширять интервал. 
+So far, everything has been boring and mundane.
 
-Т.к. данных не много, то длина последовательности небольшая, как и глубина стека вызовов (CTE recursive возможно начиная с 2005).
+## Fourth method.
+
+Let's play with recursion: for the current row, we will append data if the date is one day later and the sales plan is being executed. Thus, we will expand the interval.
+
+Since there are not many data, the length of the sequence is small, as is the depth of the call stack.
 
 ```sql
 declare @planValue int = 15
@@ -310,12 +302,12 @@ order by
 	DATEDIFF(day, BeginDate, EndDate) desc
 ```
 
-{{< figure src="https://habrastorage.org/files/cf2/05b/93b/cf205b93b3384ccf966bf5801b7a6aeb.png" class="mid" caption="Планы cte">}}
+{{< figure src="https://habrastorage.org/files/cf2/05b/93b/cf205b93b3384ccf966bf5801b7a6aeb.png" class="mid" caption="Recursion cte">}}
 
 
-## Пятый способ
+## Fifth method
 
-Перейдем к возможностям MS SQL 2012 к аналитической функций LEAD (оконные функций). Функция LEAD возвращает следующие значения со сдвигом в пределах секций по сортировке. Секций в данных у нас две: выполнения и не выполнения плана, сортировка нужна по датам, что бы найти максимальный период поступим хитро: будем искать пропуски в не выполнении плана, т.е. потом когда мы сдвинем даты начала вперед, а конец назад, то получим отрезки выполнения плана. В данном случай нам интересна только секция не выполнения плана её и возьмем, но в целом деление можно сделать так ```sql OVER ( PARTITION BY iif(f.value < @planValue, 1, 0) order by f.date)```
+Let's move on to the capabilities of MS SQL 2012 with the analytical function LEAD (window functions). The LEAD function returns the next values with a shift within the sections according to the sorting. We have two sections in our data: the execution and non-execution of the plan, sorting is needed by dates to find the maximum period. We will search for gaps in the non-execution of the plan, i.e. then when we shift the start dates forward and the end dates back, we will get periods of plan execution. In this case, we are interested only in the section of non-execution of the plan, but in general, the division can be made as follows:```sql OVER ( PARTITION BY iif(f.value < @planValue, 1, 0) order by f.date)```
 
 
 ```sql
@@ -350,13 +342,13 @@ order by
 ```
 
 
-На плане исполнения видно, что не происходит соединения таблиц, за исключение добавления дат вне отрезка для корректной работы с концами отрезков.
+I see. It is evident in the execution plan that there are no table joins, except for adding dates outside the segment to handle segment boundaries correctly.
 
-{{< figure src="https://habrastorage.org/web/236/032/9f9/2360329f9d174b8e8b4ed94de28848ac" class="mid" caption="Планы оконной функций">}}
+{{< figure src="https://habrastorage.org/web/236/032/9f9/2360329f9d174b8e8b4ed94de28848ac" class="mid" caption="Plan windows function">}}
 
-## Шестой способ
+## Sixth way
 
-А теперь побалуемся перемножим таблицу саму на себя (декартого произведение): найдем все возможные сочетания дат (30*30 = 900), отберем те у которых дата начало меньше даты конца и в этом интервале нет события не исполнения плана.
+Now let's have some fun and multiply the table by itself (Cartesian product): we will find all possible date combinations (30*30 = 900), select those where the start date is less than the end date and there is no event of not executing the plan during this interval.
 
 ```sql
 declare @planValue int = 15
@@ -382,14 +374,13 @@ and
 order by
 	DATEDIFF(day, BeginDate, EndDate) desc
 ```
-Самый медленный и тяжелый способ. Но мы гонимся не за производительностью, а за количество решений задачи.
+The sixth method is the slowest and heaviest. But we are not chasing performance, we are chasing the number of solutions to the problem.
 
-{{< figure src="https://habrastorage.org/files/e3b/484/d1f/e3b484d1fce343db8e05f25655ed93e2.png" class="mid" caption="Планы декартового произведение">}}
+{{< figure src="https://habrastorage.org/files/e3b/484/d1f/e3b484d1fce343db8e05f25655ed93e2.png" class="mid" caption="Plan cartesian product">}}
 
-## Седьмой способ
+## Seventh method:
 
-
-Обычный курсор. По перебираем данные у которых план выполнен, и ищем максимальный последовательный участок.
+Using a simple cursor. We iterate over the data where the plan is executed, and search for the longest consecutive sequence.
 
 ```sql
 declare @planValue int = 15
@@ -427,9 +418,9 @@ DEALLOCATE date_cursor;
 select 'cursor' title, DATEADD(DAY, - @maxIntervat, @endDate) BeginDate, @endDate EndDate
 ```
 
-## Не мой варианты
+## Not my ways of solving the problem
 
-Через оконный функций найдем переходы, между состояниями выполнено/не выполнение плана. И потом подбор интервалов. Могут быть проблемы из-за того, что интервал начался с выполнения плана или закончился выполнение плана, то не произойдет переход и данные подберутся не верно.
+This approach involves using window functions to find the transitions between plan execution and non-execution states, and then selecting the appropriate intervals. There may be issues if an interval starts with plan execution or ends with plan execution, as there will be no transition and the data may be selected incorrectly.
 
 
 ```sql
@@ -485,7 +476,7 @@ ORDER BY 'дни' DESC
 ```
 
 
-С определение интервалов по сдвигу дат: последовательно идущие даты имеют одинаковое приращения по дням, как обычный инкремент по строкам. На это свойстве можно получить какое то смещения и если смещения у нескольких дат совпадает при росте инкремента, то эти даты идут последовательно.
+This method involves defining intervals based on date shifts: consecutive dates have the same day increment, just like the regular increment across rows. Based on this property, we can calculate a certain offset, and if the offsets of several dates coincide with the increment growth, then these dates are sequential.
 
 
 ```sql

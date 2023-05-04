@@ -1,30 +1,20 @@
----
-title: "Обо мне"
-menu: "main"
-weight: "20"
-meta: "false"
-date: 2017-12-10
----
++++
+title = "About"
+description = "Pavel karasov C# Developer, Architect, DevOps philosopher, lover of process optimization"
+date = "2023-01-01"
+aliases = ["about-us","about-hugo","contact"]
+author = "Pavel Karasov"
++++
 
-{{< figure src="/img/avatar-full.jpg" class="float-right">}}
+BackEnd Developer with 10 years of experience in .NET. I have worked with SOLID, Pattern of GoF, high level cloud design patterns. I work in a company that provides services of automatisation distribution FMCG.
 
-# Павел Карасов
+I understand the problems of horizontal system scaling, problems of multi clients and multi thread access to databases.
 
-* Senior developer С#
-* Team lead
-* MS SQL developer
-* <s> иногда 1С </s> (стыдно)
+I helped to evolve devops in SysTech, my goal is “no manual operation in the production stage”.
+For this purpose I have built a delivery pipeline of all our services to the product stage (from legacy system to modern rest api).
+I have added auto testing to building release (UT, end2end test), due to this decision our company has decreased time to market from several weeks to hours, the frequency of rolling out a new version has increased from several times in a week to several times in a day.
 
-Отец 3 дочек
+I have created the prototype of a billing system as an implementation idea of FinOps. I have started using docker and k8s in the product station. I have provided trouble free operation of SaaS.
 
-Увлекаюсь бегом [Endomodo.com](https://www.endomondo.com/profile/1658037)
-
-Для связи
-
-* [vk.com/pakarasov](https://vk.com/pakarasov)
-
-* [github.com/ejsmile](https://github.com/ejsmile)
-
-* [pavel@karasov.net](mailto:pavel@karasov.net)
-
+Now I am learning methods of dividing of monolith to microservices. I technically develop the complex of 10+ macro services interacting with each other.
 

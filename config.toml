@@ -1,26 +1,49 @@
-baseURL = "https://p.karasov.net/"
-languageCode = "ru-ru"
-title = "Павел Карасов"
-copyright = "Copyright &copy; 2018 - Карасов Павел"
-canonifyurls = true 
-theme = "kiera"  
-paginate = 3  
-summaryLength = 30 
-enableEmoji = true 
-pygmentsCodeFences = true
-uglyurls = true
+baseURL = 'http://example.org/'
+languageCode = 'en-us'
+title = 'Pavel Karasov'
+theme = 'archie'
 
-disqusShortname = "pavelkarasov" #Disqus shortname 
-googleAnalytics = "UA-110991583-1" #Google Analytics ID
+copyright = "by Pavel Karasov"
 
-[author]          
-github = "ejsmile"     
-linkedin = ""     
-facebook = ""     
-twitter = ""     
-instagram = ""
-vk = "pakarasov"
-mail = "pavel@karasov.net"
+paginate = 4 # articles per page
 
-[params]     
-tagline = "Программист C#. Любитель наводить порядок"
+
+[params]
+	mode="auto" # color-mode → light,dark,toggle or auto
+	useCDN=false # don't use CDNs for fonts and icons, instead serve them locally.
+	subtitle = "C# Developer, Architect, DevOps philosopher, lover of process optimization"
+    
+[[params.social]]
+    name = "GitHub"
+    icon = "github"
+    url = "https://github.com/ejsmile"
+
+[[params.social]]
+    name = "Linkedin"
+    icon = "linkedin"
+    url = "http://www.linkedin.com/in/pavel-karasov"
+
+[[params.social]]
+    name = "Gmail"
+    icon = "mail"
+    url = "mailto:pavel@karasov.net"
+
+[[params.social]]
+    name = "Telegram"
+    icon = "message-circle"
+    url = "https://t.me/PavelKarasov"
+
+[[menu.main]]
+    name = "Home"
+    url = "/"
+    weight = 1
+
+[[menu.main]]
+    name = "All posts"
+    url = "/posts"
+    weight = 2
+
+[[menu.main]]
+    name = "About"
+    url = "/about"
+    weight = 3
