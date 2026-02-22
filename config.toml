@@ -1,4 +1,4 @@
-baseURL = 'http://example.org/'
+baseURL = 'https://p.karasov.net/'
 languageCode = 'en-us'
 title = 'Pavel Karasov'
 theme = 'archie'
