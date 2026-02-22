@@ -94,7 +94,12 @@ hugo --minify
 1. Checkout с submodules
 2. Установка Hugo
 3. Сборка с минификацией
-4. Деплой в `ejsmile/ejsmile.github.io`
+4. Деплой в `ejsmile/ejsmile.github.io` (ветка `master`)
+
+**Важно:** 
+- Исходники в `ejsmile/blog` → ветка `master`
+- Собранный сайт в `ejsmile/ejsmile.github.io` → ветка `master`
+- Оба репозитория используют ветку `master` (не `main`)
 
 ### Настройка токена
 
