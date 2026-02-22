@@ -29,6 +29,6 @@ jobs:
         with:
           personal_token: ${{ secrets.PERSONAL_TOKEN }}
           external_repository: ejsmile/ejsmile.github.io
-          publish_branch: main
+          publish_branch: master
           publish_dir: ./public
           cname: p.karasov.net
