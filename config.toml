@@ -11,6 +11,7 @@ pagerSize = 4
 [params]
 	mode="auto" # color-mode → light,dark,toggle or auto
 	useCDN=false # don't use CDNs for fonts and icons, instead serve them locally.
+	customCSS = ["css/fonts-cyrillic.css"]
 	subtitle = "C# Developer, Architect, DevOps philosopher, lover of process optimization"
     
 [[params.social]]

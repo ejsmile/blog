@@ -1,0 +1,4 @@
+/* Roboto Mono with Cyrillic support — overrides the latin-only local version.
+   Google Fonts splits the font into unicode-range blocks, so the browser
+   downloads only the subset it needs (Cyrillic, Latin, etc.). */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap');
